@@ -1,28 +1,45 @@
 <%- include('partials/header'); -%>
 <form>
-    <h2>log in</h2>
-    <label for="email">Email</label>
-    <input type="text" name= "email" required>
-    <div class="email error"></div>
+  <h2>log in</h2>
+  <label for="email">Email</label>
+  <input type="text" name="email" required />
+  <div class="email error"></div>
 
-
-    <label for="password">password</label>
-    <input type="password" name= "password" required>
-    <div class="password error"></div>
-    <button>Submit</button>
+  <label for="password">password</label>
+  <input type="password" name="password" required />
+  <div class="password error"></div>
+  <button>Submit</button>
 </form>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+  const form = document.querySelector("form");
+  const emailError = document.querySelector(".email.error");
+  const passError = document.querySelector(".password.error");
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
 
-<script >
-    const form = document.querySelector('form');
-    form.addEventListener('submit', (e)=>{
-        e.preventDefault();
+    //reset errors
+    emailError.textContent = "";
+    passError.textContent = "";
 
-        //get the values
-        const email=form.email.value;
-        const password = form.password.value
-        console.log(email,password);
-    })
+    //get the values
+    const email = form.email.value;
+    const password = form.password.value;
+
+    axios
+      .post("/login", {
+        email,
+        password,
+      })
+      .then((res) => {
+        location.assign("/");
+      })
+      .catch((error) => {
+        console.log(error.response);
+        emailError.textContent = error.response.data.email;
+        passError.textContent = error.response.data.password;
+      });
+  });
 </script>
-
 
 <%- include('partials/footer'); -%>
